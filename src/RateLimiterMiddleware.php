@@ -7,7 +7,7 @@ class RateLimiterMiddleware
     /** @var \Spatie\GuzzleRateLimiterMiddleware\RateLimiter */
     protected $rateLimiter;
 
-    private function __construct(RateLimiter $rateLimiter)
+    protected function __construct(RateLimiter $rateLimiter)
     {
         $this->rateLimiter = $rateLimiter;
     }
