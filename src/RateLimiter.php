@@ -13,48 +13,62 @@ class RateLimiter
     /** @var string */
     protected $timeFrame;
 
-    /** @var float[] */
-    protected $log = [];
+    /** @var \Spatie\RateLimiter\Store */
+    protected $store;
 
     /** @var \Spatie\GuzzleRateLimiter\TimeMachine */
     protected $timeMachine;
 
-    public function __construct(int $limit, string $timeFrame, TimeMachine $timeMachine) {
+    public function __construct(
+        int $limit,
+        string $timeFrame,
+        Store $store,
+        TimeMachine $timeMachine
+    ) {
         $this->limit = $limit;
         $this->timeFrame = $timeFrame;
+        $this->store = $store;
         $this->timeMachine = $timeMachine;
     }
 
     public function handle(callable $callback)
     {
-        if (! $this->allowsMoreActionsInCurrentTimeFrame()) {
-            $this->timeMachine->sleep($this->timeUntilNextTimeFrame());
+        $delayUntilNextRequest = $this->delayUntilNextRequest();
+
+        if ($delayUntilNextRequest > 0) {
+            $this->timeMachine->sleep($delayUntilNextRequest);
         }
 
-        $this->log[] = $this->timeMachine->getCurrentTime();
+        $this->store->push(
+            $this->timeMachine->getCurrentTime(),
+            $this->limit
+        );
 
         $callback();
     }
 
-    protected function allowsMoreActionsInCurrentTimeFrame(): bool
+    protected function delayUntilNextRequest(): int
     {
-        $currentTimeFrameStart = $this->timeMachine->getCurrentTime() - $this->timeFrameInMilliseconds();
+        $currentTimeFrameStart = $this->timeMachine->getCurrentTime() - $this->timeFrameLengthInMilliseconds();
 
-        $actionsInCurrentTimeFrame = array_filter($this->log, function (int $timestamp) use ($currentTimeFrameStart) {
-            return $timestamp >= $currentTimeFrameStart;
-        });
+        $requestsInCurrentTimeFrame = array_values(array_filter(
+            $this->store->get(),
+            function (int $timestamp) use ($currentTimeFrameStart) {
+                return $timestamp >= $currentTimeFrameStart;
+            }
+        ));
 
-        return $actionsInCurrentTimeFrame < $this->limit;
+        if (count($requestsInCurrentTimeFrame) < $this->limit) {
+            return 0;
+        }
+
+        $oldestRequestStartTimeRelativeToCurrentTimeFrame =
+            $this->timeMachine->getCurrentTime() - $requestsInCurrentTimeFrame[0];
+
+        return $this->timeFrameLengthInMilliseconds() - $oldestRequestStartTimeRelativeToCurrentTimeFrame;
     }
 
-    protected function timeUntilNextTimeFrame(): int
-    {
-        // Todo
-
-        return array_slice($this->log, -1 * $this->limit)[0] + $this->timeFrameInMilliseconds();
-    }
-
-    protected function timeFrameInMilliseconds(): int
+    protected function timeFrameLengthInMilliseconds(): int
     {
         if ($this->timeFrame === self::TIME_FRAME_MINUTE) {
             return 60 * 1000;

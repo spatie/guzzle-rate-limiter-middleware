@@ -12,22 +12,24 @@ class RateLimit
         $this->rateLimiter = $rateLimiter;
     }
 
-    public static function perSecond(int $limit): RateLimiter
+    public static function perSecond(int $limit, Store $store = null): RateLimiter
     {
         $rateLimiter = new RateLimiter(
             $limit,
             RateLimiter::TIME_FRAME_SECOND,
+            $store ?? new InMemoryStore(),
             new RealTimeMachine()
         );
 
         return new static($rateLimiter);
     }
 
-    public static function perMinute(int $limit): RateLimiter
+    public static function perMinute(int $limit, Store $store = null): RateLimiter
     {
         $rateLimiter = new RateLimiter(
             $limit,
             RateLimiter::TIME_FRAME_SECOND,
+            $store ?? new InMemoryStore(),
             new RealTimeMachine()
         );
     }

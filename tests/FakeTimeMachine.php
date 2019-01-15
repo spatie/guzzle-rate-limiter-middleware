@@ -7,21 +7,16 @@ use Spatie\GuzzleRateLimit\TimeMachine;
 
 class FakeTimeMachine implements TimeMachine
 {
+    /** @var int */
+    protected $currentTime = 0;
+
     public function getCurrentTime(): int
     {
-        if (empty($this->currentTimes)) {
-            throw new Exception("No current time call expected.");
-        }
-
-        return array_shift($this->currentTimes);
-    }
-
-    public function expectCurrentTimeCalls(array $currentTimes)
-    {
-        $this->currentTimes = $currentTimes;
+        return $this->currentTime;
     }
 
     public function sleep(int $milliseconds)
     {
+        $this->currentTime += $milliseconds;
     }
 }

@@ -4,24 +4,127 @@ namespace Spatie\GuzzleRateLimit\Tests;
 
 use Spatie\GuzzleRateLimit\RateLimiter;
 
-
 class RateLimiterTest extends TestCase
 {
     /** @test */
-    public function it_executes_actions_when_below_the_limit()
+    public function it_execute_actions_below_a_limit_in_seconds()
     {
-        $rateLimiter = new RateLimiter(10, RateLimiter::TIME_FRAME_MINUTE, $this->timeMachine);
+        $rateLimiter = $this->createRateLimiter(3, RateLimiter::TIME_FRAME_SECOND);
 
-        $this->timeMachine->expectCurrentTimeCalls([
-            microtime(true) * 1000,
-        ]);
+        $this->assertEquals(0, $this->timeMachine->getCurrentTime());
 
-        $handled = false;
-
-        $rateLimiter->handle(function () use (&$handled) {
-            $handled = true;
+        $rateLimiter->handle(function () {
+            $this->timeMachine->sleep(100);
         });
 
-        $this->assertTrue($handled);
+        $this->assertEquals(100, $this->timeMachine->getCurrentTime());
+
+        $rateLimiter->handle(function () {
+            $this->timeMachine->sleep(100);
+        });
+
+        $this->assertEquals(200, $this->timeMachine->getCurrentTime());
+
+        $rateLimiter->handle(function () {
+            $this->timeMachine->sleep(100);
+        });
+
+        $this->assertEquals(300, $this->timeMachine->getCurrentTime());
+
+        $this->timeMachine->sleep(700);
+
+        $rateLimiter->handle(function () {
+            $this->timeMachine->sleep(100);
+        });
+
+        $this->assertEquals(1100, $this->timeMachine->getCurrentTime());
+
+        $rateLimiter->handle(function () {
+            $this->timeMachine->sleep(100);
+        });
+
+        $this->assertEquals(1200, $this->timeMachine->getCurrentTime());
+    }
+
+    /** @test */
+    public function it_defers_actions_when_it_reaches_a_limit_in_seconds()
+    {
+        $rateLimiter = $this->createRateLimiter(3, RateLimiter::TIME_FRAME_SECOND);
+
+        $this->assertEquals(0, $this->timeMachine->getCurrentTime());
+
+        $rateLimiter->handle(function () {});
+
+        $this->assertEquals(0, $this->timeMachine->getCurrentTime());
+
+        $rateLimiter->handle(function () {});
+
+        $this->assertEquals(0, $this->timeMachine->getCurrentTime());
+
+        $rateLimiter->handle(function () {});
+
+        $this->assertEquals(0, $this->timeMachine->getCurrentTime());
+
+        $rateLimiter->handle(function () {});
+
+        $this->assertEquals(1000, $this->timeMachine->getCurrentTime());
+    }
+
+    /** @test */
+    public function it_execute_actions_below_a_limit_in_minutes()
+    {
+        $rateLimiter = $this->createRateLimiter(3, RateLimiter::TIME_FRAME_MINUTE);
+
+        $this->assertEquals(0, $this->timeMachine->getCurrentTime());
+
+        $rateLimiter->handle(function () {
+            $this->timeMachine->sleep(100);
+        });
+
+        $this->assertEquals(100, $this->timeMachine->getCurrentTime());
+
+        $rateLimiter->handle(function () {
+            $this->timeMachine->sleep(100);
+        });
+
+        $this->assertEquals(200, $this->timeMachine->getCurrentTime());
+
+        $rateLimiter->handle(function () {
+            $this->timeMachine->sleep(100);
+        });
+
+        $this->assertEquals(300, $this->timeMachine->getCurrentTime());
+
+        $this->timeMachine->sleep(59700);
+
+        $rateLimiter->handle(function () {
+            $this->timeMachine->sleep(100);
+        });
+
+        $this->assertEquals(60100, $this->timeMachine->getCurrentTime());
+    }
+
+    /** @test */
+    public function it_defers_actions_when_it_reaches_a_limit_in_minutes()
+    {
+        $rateLimiter = $this->createRateLimiter(3, RateLimiter::TIME_FRAME_MINUTE);
+
+        $this->assertEquals(0, $this->timeMachine->getCurrentTime());
+
+        $rateLimiter->handle(function () {});
+
+        $this->assertEquals(0, $this->timeMachine->getCurrentTime());
+
+        $rateLimiter->handle(function () {});
+
+        $this->assertEquals(0, $this->timeMachine->getCurrentTime());
+
+        $rateLimiter->handle(function () {});
+
+        $this->assertEquals(0, $this->timeMachine->getCurrentTime());
+
+        $rateLimiter->handle(function () {});
+
+        $this->assertEquals(60000, $this->timeMachine->getCurrentTime());
     }
 }

@@ -1,12 +1,15 @@
-# Very short description of the package
+# A rate limit middleware for Guzzle
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/guzzle-rate-limit.svg?style=flat-square)](https://packagist.org/packages/spatie/:package_name)
 [![Build Status](https://img.shields.io/travis/spatie/guzzle-rate-limit/master.svg?style=flat-square)](https://travis-ci.org/spatie/:package_name)
 [![Quality Score](https://img.shields.io/scrutinizer/g/spatie/guzzle-rate-limit.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/:package_name)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/guzzle-rate-limit.svg?style=flat-square)](https://packagist.org/packages/spatie/:package_name)
 
+A rate limit middleware for Guzzle. Here's what you need to know:
 
-This is where your description should go. Try and limit it to a paragraph or two.
+- Specify a maximum amount of requests per minute or per second
+- When the limit is reached, the process will `sleep` until the request can be made
+- Implement your own driver to persist the rate limiter's request store. This is necessary if the rate limiter needs to work across separate processes, the package ships with an `InMemoryStore`.
 
 ## Installation
 
@@ -18,9 +21,60 @@ composer require spatie/guzzle-rate-limit
 
 ## Usage
 
-``` php
-$skeleton = new Spatie\Skeleton();
-echo $skeleton->echoPhrase('Hello, Spatie!');
+Create a
+
+```php
+use GuzzleHttp\Client;
+use GuzzleHttp\HandlerStack;
+use Spatie\GuzzleRateLimit\RateLimit;
+
+$stack = new HandlerStack();
+$stack->setHandler(RateLimit::perSecond(3));
+
+$client = new Client(['handler' => $stack]);
+```
+
+You can create a rate limiter to limit per second or per minute.
+
+```php
+RateLimit::perSecond(3); // Max. 3 requests per second
+
+RateLimit::perMinute(5); // Max. 5 requests per minute
+```
+
+## Custom stores
+
+By default, the rate limiter works in memory. This means that if you have a second PHP process (or Guzzle client) consuming the same API, you'd still possibly hit the rate limit. To work around this issue, the rate limiter's state should be persisted to a cache. Implement the `Store` interface with your own cache, and pass the store to the rate limiter.
+
+```php
+use MyApp\RateLimiterStore;
+use Spatie\GuzzleRateLimit\RateLimit;
+
+RateLimit::perSecond(3, new RateLimiterStore());
+```
+
+A Laravel example of a custom `Store`:
+
+```php
+<?php
+
+namespace MyApp;
+
+use Spatie\GuzzleRateLimit\Store;
+use Illuminate\Support\Facades\Cache;
+
+class RateLimiterStore implements Store
+{
+    public function get(): array
+    {
+        return Cache::get('rate-limiter', []);
+    }
+
+    public function push(int $timestamp)
+    {
+        Cache::put('rate-limiter', array_merge($this->get(), $timestamp));
+    }
+}
 ```
 
 ### Testing
