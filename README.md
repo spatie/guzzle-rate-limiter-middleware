@@ -21,17 +21,20 @@ composer require spatie/guzzle-rate-limit
 
 ## Usage
 
-Create a
+Create a [Guzzle middleware stack](http://docs.guzzlephp.org/en/stable/handlers-and-middleware.html) and register it on the client.
 
 ```php
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use Spatie\GuzzleRateLimit\RateLimit;
 
-$stack = new HandlerStack();
-$stack->setHandler(RateLimit::perSecond(3));
+$stack = HandlerStack::create(
+    RateLimit::perSecond(3)
+);
 
-$client = new Client(['handler' => $stack]);
+$client = new Client([
+    'handler' => $stack,
+]);
 ```
 
 You can create a rate limiter to limit per second or per minute.
