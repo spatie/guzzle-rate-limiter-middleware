@@ -1,10 +1,10 @@
 <?php
 
-namespace Spatie\GuzzleRateLimit\Tests;
+namespace Spatie\GuzzleRateLimiter\Tests;
 
 use PHPUnit\Framework\TestCase as BaseTestCase;
-use Spatie\GuzzleRateLimit\InMemoryStore;
-use Spatie\GuzzleRateLimit\RateLimiter;
+use Spatie\GuzzleRateLimiter\InMemoryStore;
+use Spatie\GuzzleRateLimiter\RateLimiter;
 
 abstract class TestCase extends BaseTestCase
 {

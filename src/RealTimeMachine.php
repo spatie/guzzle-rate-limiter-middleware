@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\GuzzleRateLimit;
+namespace Spatie\GuzzleRateLimiter;
 
 class RealTimeMachine implements TimeMachine
 {

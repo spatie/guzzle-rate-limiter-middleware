@@ -1,8 +1,8 @@
 <?php
 
-namespace Spatie\GuzzleRateLimit;
+namespace Spatie\GuzzleRateLimiter;
 
-class RateLimit
+class RateLimiterMiddleware
 {
     /** @var \Spatie\GuzzleRateLimiter\RateLimiter */
     protected $rateLimiter;

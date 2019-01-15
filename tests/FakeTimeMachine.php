@@ -1,9 +1,9 @@
 <?php
 
-namespace Spatie\GuzzleRateLimit\Tests;
+namespace Spatie\GuzzleRateLimiter\Tests;
 
 use Exception;
-use Spatie\GuzzleRateLimit\TimeMachine;
+use Spatie\GuzzleRateLimiter\TimeMachine;
 
 class FakeTimeMachine implements TimeMachine
 {

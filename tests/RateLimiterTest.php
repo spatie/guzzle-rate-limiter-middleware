@@ -1,8 +1,8 @@
 <?php
 
-namespace Spatie\GuzzleRateLimit\Tests;
+namespace Spatie\GuzzleRateLimiter\Tests;
 
-use Spatie\GuzzleRateLimit\RateLimiter;
+use Spatie\GuzzleRateLimiter\RateLimiter;
 
 class RateLimiterTest extends TestCase
 {

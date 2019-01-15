@@ -1,11 +1,11 @@
-# A rate limit middleware for Guzzle
+# A rate limiter middleware for Guzzle
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/guzzle-rate-limit.svg?style=flat-square)](https://packagist.org/packages/spatie/:package_name)
 [![Build Status](https://img.shields.io/travis/spatie/guzzle-rate-limit/master.svg?style=flat-square)](https://travis-ci.org/spatie/:package_name)
 [![Quality Score](https://img.shields.io/scrutinizer/g/spatie/guzzle-rate-limit.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/:package_name)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/guzzle-rate-limit.svg?style=flat-square)](https://packagist.org/packages/spatie/:package_name)
 
-A rate limit middleware for Guzzle. Here's what you need to know:
+A rate limiter middleware for Guzzle. Here's what you need to know:
 
 - Specify a maximum amount of requests per minute or per second
 - When the limit is reached, the process will `sleep` until the request can be made
@@ -16,7 +16,7 @@ A rate limit middleware for Guzzle. Here's what you need to know:
 You can install the package via composer:
 
 ```bash
-composer require spatie/guzzle-rate-limit
+composer require spatie/guzzle-rate-limiter
 ```
 
 ## Usage
@@ -26,10 +26,10 @@ Create a [Guzzle middleware stack](http://docs.guzzlephp.org/en/stable/handlers-
 ```php
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
-use Spatie\GuzzleRateLimit\RateLimit;
+use Spatie\GuzzleRateLimiter\RateLimiterMiddleware;
 
 $stack = HandlerStack::create(
-    RateLimit::perSecond(3)
+    RateLimiterMiddleware::perSecond(3)
 );
 
 $client = new Client([
@@ -51,7 +51,7 @@ By default, the rate limiter works in memory. This means that if you have a seco
 
 ```php
 use MyApp\RateLimiterStore;
-use Spatie\GuzzleRateLimit\RateLimit;
+use Spatie\GuzzleRateLimiter\RateLimit;
 
 RateLimit::perSecond(3, new RateLimiterStore());
 ```
@@ -63,7 +63,7 @@ A Laravel example of a custom `Store`:
 
 namespace MyApp;
 
-use Spatie\GuzzleRateLimit\Store;
+use Spatie\GuzzleRateLimiter\Store;
 use Illuminate\Support\Facades\Cache;
 
 class RateLimiterStore implements Store
