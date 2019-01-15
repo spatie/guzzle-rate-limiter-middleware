@@ -2,7 +2,6 @@
 
 namespace Spatie\GuzzleRateLimiterMiddleware\Tests;
 
-use Exception;
 use Spatie\GuzzleRateLimiterMiddleware\TimeMachine;
 
 class FakeTimeMachine implements TimeMachine
