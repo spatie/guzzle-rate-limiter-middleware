@@ -1,10 +1,10 @@
 <?php
 
-namespace Spatie\GuzzleRateLimiter;
+namespace Spatie\GuzzleRateLimiterMiddleware;
 
 class RateLimiterMiddleware
 {
-    /** @var \Spatie\GuzzleRateLimiter\RateLimiter */
+    /** @var \Spatie\GuzzleRateLimiterMiddleware\RateLimiter */
     protected $rateLimiter;
 
     private function __construct(RateLimiter $rateLimiter)

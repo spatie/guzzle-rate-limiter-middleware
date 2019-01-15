@@ -1,14 +1,14 @@
 <?php
 
-namespace Spatie\GuzzleRateLimiter\Tests;
+namespace Spatie\GuzzleRateLimiterMiddleware\Tests;
 
 use PHPUnit\Framework\TestCase as BaseTestCase;
-use Spatie\GuzzleRateLimiter\InMemoryStore;
-use Spatie\GuzzleRateLimiter\RateLimiter;
+use Spatie\GuzzleRateLimiterMiddleware\InMemoryStore;
+use Spatie\GuzzleRateLimiterMiddleware\RateLimiter;
 
 abstract class TestCase extends BaseTestCase
 {
-    /** @var \Spatie\GuzzleRateLimiter\Tests\FakeTimeMachine */
+    /** @var \Spatie\GuzzleRateLimiterMiddleware\Tests\FakeTimeMachine */
     protected $timeMachine;
 
     public function setUp()

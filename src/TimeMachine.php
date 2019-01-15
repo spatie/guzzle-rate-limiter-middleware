@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\GuzzleRateLimiter;
+namespace Spatie\GuzzleRateLimiterMiddleware;
 
 interface TimeMachine
 {

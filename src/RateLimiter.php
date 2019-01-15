@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\GuzzleRateLimiter;
+namespace Spatie\GuzzleRateLimiterMiddleware;
 
 class RateLimiter
 {
@@ -16,7 +16,7 @@ class RateLimiter
     /** @var \Spatie\RateLimiter\Store */
     protected $store;
 
-    /** @var \Spatie\GuzzleRateLimiter\TimeMachine */
+    /** @var \Spatie\GuzzleRateLimiterMiddleware\TimeMachine */
     protected $timeMachine;
 
     public function __construct(

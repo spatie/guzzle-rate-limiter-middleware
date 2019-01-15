@@ -1,11 +1,11 @@
 {
-    "name": "spatie/guzzle-rate-limiter",
+    "name": "spatie/guzzle-rate-limiter-middleware",
     "description": "A rate limiter for Guzzle",
     "keywords": [
         "spatie",
-        "guzzle-rate-limiter"
+        "guzzle-rate-limiter-middleware"
     ],
-    "homepage": "https://github.com/spatie/guzzle-rate-limiter",
+    "homepage": "https://github.com/spatie/guzzle-rate-limiter-middleware",
     "license": "MIT",
     "authors": [
         {
@@ -25,12 +25,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Spatie\\GuzzleRateLimiter\\": "src"
+            "Spatie\\GuzzleRateLimiterMiddleware\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Spatie\\GuzzleRateLimiter\\Tests\\": "tests"
+            "Spatie\\GuzzleRateLimiterMiddleware\\Tests\\": "tests"
         }
     },
     "scripts": {

@@ -16,7 +16,7 @@ A rate limiter middleware for Guzzle. Here's what you need to know:
 You can install the package via composer:
 
 ```bash
-composer require spatie/guzzle-rate-limiter
+composer require spatie/guzzle-rate-limiter-middleware
 ```
 
 ## Usage
@@ -26,7 +26,7 @@ Create a [Guzzle middleware stack](http://docs.guzzlephp.org/en/stable/handlers-
 ```php
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
-use Spatie\GuzzleRateLimiter\RateLimiterMiddleware;
+use Spatie\GuzzleRateLimiterMiddleware\RateLimiterMiddleware;
 
 $stack = HandlerStack::create(
     RateLimiterMiddleware::perSecond(3)
@@ -51,7 +51,7 @@ By default, the rate limiter works in memory. This means that if you have a seco
 
 ```php
 use MyApp\RateLimiterStore;
-use Spatie\GuzzleRateLimiter\RateLimit;
+use Spatie\GuzzleRateLimiterMiddleware\RateLimit;
 
 RateLimit::perSecond(3, new RateLimiterStore());
 ```
@@ -63,7 +63,7 @@ A Laravel example of a custom `Store`:
 
 namespace MyApp;
 
-use Spatie\GuzzleRateLimiter\Store;
+use Spatie\GuzzleRateLimiterMiddleware\Store;
 use Illuminate\Support\Facades\Cache;
 
 class RateLimiterStore implements Store
