@@ -53,19 +53,23 @@ class RateLimiterTest extends TestCase
 
         $this->assertEquals(0, $this->timeMachine->getCurrentTime());
 
-        $rateLimiter->handle(function () {});
+        $rateLimiter->handle(function () {
+        });
 
         $this->assertEquals(0, $this->timeMachine->getCurrentTime());
 
-        $rateLimiter->handle(function () {});
+        $rateLimiter->handle(function () {
+        });
 
         $this->assertEquals(0, $this->timeMachine->getCurrentTime());
 
-        $rateLimiter->handle(function () {});
+        $rateLimiter->handle(function () {
+        });
 
         $this->assertEquals(0, $this->timeMachine->getCurrentTime());
 
-        $rateLimiter->handle(function () {});
+        $rateLimiter->handle(function () {
+        });
 
         $this->assertEquals(1000, $this->timeMachine->getCurrentTime());
     }
@@ -111,19 +115,23 @@ class RateLimiterTest extends TestCase
 
         $this->assertEquals(0, $this->timeMachine->getCurrentTime());
 
-        $rateLimiter->handle(function () {});
+        $rateLimiter->handle(function () {
+        });
 
         $this->assertEquals(0, $this->timeMachine->getCurrentTime());
 
-        $rateLimiter->handle(function () {});
+        $rateLimiter->handle(function () {
+        });
 
         $this->assertEquals(0, $this->timeMachine->getCurrentTime());
 
-        $rateLimiter->handle(function () {});
+        $rateLimiter->handle(function () {
+        });
 
         $this->assertEquals(0, $this->timeMachine->getCurrentTime());
 
-        $rateLimiter->handle(function () {});
+        $rateLimiter->handle(function () {
+        });
 
         $this->assertEquals(60000, $this->timeMachine->getCurrentTime());
     }
