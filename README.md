@@ -41,9 +41,9 @@ $client = new Client([
 You can create a rate limiter to limit per second or per minute.
 
 ```php
-RateLimit::perSecond(3); // Max. 3 requests per second
+RateLimiterMiddleware::perSecond(3); // Max. 3 requests per second
 
-RateLimit::perMinute(5); // Max. 5 requests per minute
+RateLimiterMiddleware::perMinute(5); // Max. 5 requests per minute
 ```
 
 ## Custom stores
@@ -54,7 +54,7 @@ By default, the rate limiter works in memory. This means that if you have a seco
 use MyApp\RateLimiterStore;
 use Spatie\GuzzleRateLimiterMiddleware\RateLimit;
 
-RateLimit::perSecond(3, new RateLimiterStore());
+RateLimiterMiddleware::perSecond(3, new RateLimiterStore());
 ```
 
 A Laravel example of a custom `Store`:
