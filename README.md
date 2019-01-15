@@ -1,7 +1,7 @@
 # A rate limiter middleware for Guzzle
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/guzzle-rate-limit.svg?style=flat-square)](https://packagist.org/packages/spatie/guzzle-rate-limiter-middleware)
-[![Build Status](https://img.shields.io/travis/spatie/guzzle-rate-limit/master.svg?style=flat-square)](https://travis-ci.org/spatie/guzzle-rate-limiter-middleware)
+[![Build Status](https://img.shields.io/travis/spatie/guzzle-rate-limiter-middleware/master.svg?style=flat-square)](https://travis-ci.org/spatie/guzzle-rate-limiter-middleware)
 [![Quality Score](https://img.shields.io/scrutinizer/g/spatie/guzzle-rate-limiter-middleware.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/guzzle-rate-limiter-middleware)
 [![StyleCI](https://github.styleci.io/repos/165693657/shield?branch=master)](https://github.styleci.io/repos/165693657)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/guzzle-rate-limit.svg?style=flat-square)](https://packagist.org/packages/spatie/guzzle-rate-limiter-middleware)
