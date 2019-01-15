@@ -20,7 +20,7 @@ class RateLimiterMiddleware
             $limit,
             RateLimiter::TIME_FRAME_SECOND,
             $store ?? new InMemoryStore(),
-            new RealTimeMachine()
+            new SleepDeferrer()
         );
 
         return new static($rateLimiter);
@@ -32,7 +32,7 @@ class RateLimiterMiddleware
             $limit,
             RateLimiter::TIME_FRAME_MINUTE,
             $store ?? new InMemoryStore(),
-            new RealTimeMachine()
+            new SleepDeferrer()
         );
 
         return new static($rateLimiter);

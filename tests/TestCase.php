@@ -8,18 +8,18 @@ use Spatie\GuzzleRateLimiterMiddleware\InMemoryStore;
 
 abstract class TestCase extends BaseTestCase
 {
-    /** @var \Spatie\GuzzleRateLimiterMiddleware\Tests\FakeTimeMachine */
-    protected $timeMachine;
+    /** @var \Spatie\GuzzleRateLimiterMiddleware\Tests\TestDeferrer */
+    protected $deferrer;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->timeMachine = new FakeTimeMachine();
+        $this->deferrer = new TestDeferrer();
     }
 
     public function createRateLimiter(int $limit, string $timeFrame): RateLimiter
     {
-        return new RateLimiter($limit, $timeFrame, new InMemoryStore(), $this->timeMachine);
+        return new RateLimiter($limit, $timeFrame, new InMemoryStore(), $this->deferrer);
     }
 }

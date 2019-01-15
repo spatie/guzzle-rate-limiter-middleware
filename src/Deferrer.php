@@ -2,7 +2,7 @@
 
 namespace Spatie\GuzzleRateLimiterMiddleware;
 
-interface TimeMachine
+interface Deferrer
 {
     public function getCurrentTime(): int;
 

@@ -2,9 +2,9 @@
 
 namespace Spatie\GuzzleRateLimiterMiddleware\Tests;
 
-use Spatie\GuzzleRateLimiterMiddleware\TimeMachine;
+use Spatie\GuzzleRateLimiterMiddleware\Deferrer;
 
-class FakeTimeMachine implements TimeMachine
+class TestDeferrer implements Deferrer
 {
     /** @var int */
     protected $currentTime = 0;

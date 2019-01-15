@@ -2,7 +2,7 @@
 
 namespace Spatie\GuzzleRateLimiterMiddleware;
 
-class RealTimeMachine implements TimeMachine
+class SleepDeferrer implements Deferrer
 {
     public function getCurrentTime(): int
     {

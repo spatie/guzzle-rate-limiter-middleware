@@ -16,19 +16,19 @@ class RateLimiter
     /** @var \Spatie\RateLimiter\Store */
     protected $store;
 
-    /** @var \Spatie\GuzzleRateLimiterMiddleware\TimeMachine */
-    protected $timeMachine;
+    /** @var \Spatie\GuzzleRateLimiterMiddleware\Deferrer */
+    protected $deferrer;
 
     public function __construct(
         int $limit,
         string $timeFrame,
         Store $store,
-        TimeMachine $timeMachine
+        Deferrer $deferrer
     ) {
         $this->limit = $limit;
         $this->timeFrame = $timeFrame;
         $this->store = $store;
-        $this->timeMachine = $timeMachine;
+        $this->deferrer = $deferrer;
     }
 
     public function handle(callable $callback)
@@ -36,11 +36,11 @@ class RateLimiter
         $delayUntilNextRequest = $this->delayUntilNextRequest();
 
         if ($delayUntilNextRequest > 0) {
-            $this->timeMachine->sleep($delayUntilNextRequest);
+            $this->deferrer->sleep($delayUntilNextRequest);
         }
 
         $this->store->push(
-            $this->timeMachine->getCurrentTime(),
+            $this->deferrer->getCurrentTime(),
             $this->limit
         );
 
@@ -49,7 +49,7 @@ class RateLimiter
 
     protected function delayUntilNextRequest(): int
     {
-        $currentTimeFrameStart = $this->timeMachine->getCurrentTime() - $this->timeFrameLengthInMilliseconds();
+        $currentTimeFrameStart = $this->deferrer->getCurrentTime() - $this->timeFrameLengthInMilliseconds();
 
         $requestsInCurrentTimeFrame = array_values(array_filter(
             $this->store->get(),
@@ -63,7 +63,7 @@ class RateLimiter
         }
 
         $oldestRequestStartTimeRelativeToCurrentTimeFrame =
-            $this->timeMachine->getCurrentTime() - $requestsInCurrentTimeFrame[0];
+            $this->deferrer->getCurrentTime() - $requestsInCurrentTimeFrame[0];
 
         return $this->timeFrameLengthInMilliseconds() - $oldestRequestStartTimeRelativeToCurrentTimeFrame;
     }
