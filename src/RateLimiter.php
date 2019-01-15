@@ -44,7 +44,7 @@ class RateLimiter
             $this->limit
         );
 
-        $callback();
+        return $callback();
     }
 
     protected function delayUntilNextRequest(): int

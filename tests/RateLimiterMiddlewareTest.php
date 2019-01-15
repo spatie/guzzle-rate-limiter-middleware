@@ -2,15 +2,21 @@
 
 namespace Spatie\GuzzleRateLimiterMiddleware\Tests;
 
-use Spatie\GuzzleRateLimiterMiddleware\RateLimiter;
+use Spatie\GuzzleRateLimiterMiddleware\RateLimiterMiddleware;
 
 class RateLimiterMiddlewareTest extends TestCase
 {
     /** @test */
     public function it_has_named_constructors_to_create_instances()
     {
-        $this->assertInstanceOf(RateLimiter::class, RateLimiter::perSecond(5));
+        $this->assertInstanceOf(
+            RateLimiterMiddleware::class,
+            RateLimiterMiddleware::perSecond(5)
+        );
 
-        $this->assertInstanceOf(RateLimiter::class, RateLimiter::perMinute(5));
+        $this->assertInstanceOf(
+            RateLimiterMiddleware::class,
+            RateLimiterMiddleware::perMinute(5)
+        );
     }
 }
