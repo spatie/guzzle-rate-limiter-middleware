@@ -29,9 +29,8 @@ use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use Spatie\GuzzleRateLimiterMiddleware\RateLimiterMiddleware;
 
-$stack = HandlerStack::create(
-    RateLimiterMiddleware::perSecond(3)
-);
+$stack = HandlerStack::create();
+$stack->push(RateLimiterMiddleware::perSecond(3));
 
 $client = new Client([
     'handler' => $stack,
