@@ -11,6 +11,6 @@ class SleepDeferrer implements Deferrer
 
     public function sleep(int $milliseconds)
     {
-        sleep($milliseconds / 1000);
+        usleep($milliseconds * 1000);
     }
 }
