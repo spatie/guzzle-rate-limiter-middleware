@@ -2,6 +2,10 @@
 
 All notable changes to `guzzle-rate-limiter-middleware` will be documented in this file
 
+## 1.0.8 - 2020-07-16
+
+- allow Guzzle 7
+
 ## 1.0.7 - 2020-01-09
 
 - Cast return value of SleepDeferrer to int (#7)
