@@ -6,5 +6,5 @@ interface Store
 {
     public function get(): array;
 
-    public function push(int $timestamp, $limit);
+    public function push(int $timestamp, int $limit);
 }
