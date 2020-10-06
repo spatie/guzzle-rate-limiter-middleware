@@ -14,25 +14,25 @@ class RateLimiterMiddleware
         $this->rateLimiter = $rateLimiter;
     }
 
-    public static function perSecond(int $limit, Store $store = null): RateLimiterMiddleware
+    public static function perSecond(int $limit, Store $store = null, Deferrer $deferrer = null): RateLimiterMiddleware
     {
         $rateLimiter = new RateLimiter(
             $limit,
             RateLimiter::TIME_FRAME_SECOND,
             $store ?? new InMemoryStore(),
-            new SleepDeferrer()
+            $deferrer ?? new SleepDeferrer()
         );
 
         return new static($rateLimiter);
     }
 
-    public static function perMinute(int $limit, Store $store = null): RateLimiterMiddleware
+    public static function perMinute(int $limit, Store $store = null, Deferrer $deferrer = null): RateLimiterMiddleware
     {
         $rateLimiter = new RateLimiter(
             $limit,
             RateLimiter::TIME_FRAME_MINUTE,
             $store ?? new InMemoryStore(),
-            new SleepDeferrer()
+            $deferrer ?? new SleepDeferrer()
         );
 
         return new static($rateLimiter);
