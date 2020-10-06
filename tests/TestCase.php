@@ -3,8 +3,8 @@
 namespace Spatie\GuzzleRateLimiterMiddleware\Tests;
 
 use PHPUnit\Framework\TestCase as BaseTestCase;
-use Spatie\GuzzleRateLimiterMiddleware\RateLimiter;
 use Spatie\GuzzleRateLimiterMiddleware\InMemoryStore;
+use Spatie\GuzzleRateLimiterMiddleware\RateLimiter;
 
 abstract class TestCase extends BaseTestCase
 {
