@@ -11,7 +11,7 @@ abstract class TestCase extends BaseTestCase
     /** @var \Spatie\GuzzleRateLimiterMiddleware\Tests\TestDeferrer */
     protected $deferrer;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
