@@ -81,9 +81,12 @@ class RateLimiterStore implements Store
         return Cache::get('rate-limiter', []);
     }
 
-    public function push(int $timestamp, int $limit)
+    public function push(int $timestamp, int $limit): void
     {
-        Cache::put('rate-limiter', array_merge($this->get(), [$timestamp]));
+        $current = array_slice($this->get(), -($limit + 1));
+        $current[] = $timestamp;
+
+        Cache::put('rate-limiter', $current, 61);
     }
 }
 ```
