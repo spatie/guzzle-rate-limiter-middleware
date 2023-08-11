@@ -4,14 +4,20 @@ namespace Spatie\GuzzleRateLimiterMiddleware;
 
 class RateLimiter
 {
+    const TIME_FRAME_DAY = 'day';
+    const TIME_FRAME_HOUR = 'hour';
     const TIME_FRAME_MINUTE = 'minute';
     const TIME_FRAME_SECOND = 'second';
+    const TIME_FRAME_MILLISECOND = 'millisecond';
 
     /** @var int */
     protected $limit;
 
+    /** @var int */
+    protected $timeInterval;
+
     /** @var string */
-    protected $timeFrame;
+    protected $timeUnit;
 
     /** @var \Spatie\RateLimiter\Store */
     protected $store;
@@ -21,12 +27,14 @@ class RateLimiter
 
     public function __construct(
         int $limit,
-        string $timeFrame,
+        int $timeInterval,
+        string $timeUnit,
         Store $store,
         Deferrer $deferrer
     ) {
         $this->limit = $limit;
-        $this->timeFrame = $timeFrame;
+        $this->timeInterval = $timeInterval;
+        $this->timeUnit = $timeUnit;
         $this->store = $store;
         $this->deferrer = $deferrer;
     }
@@ -70,10 +78,18 @@ class RateLimiter
 
     protected function timeFrameLengthInMilliseconds(): int
     {
-        if ($this->timeFrame === self::TIME_FRAME_MINUTE) {
-            return 60 * 1000;
+        $unitsInMilliseconds = [
+            'millisecond' => 1,
+            'second' => 1000,
+            'minute' => 60 * 1000,
+            'hour'   => 60 * 60 * 1000,
+            'day'    => 24 * 60 * 60 * 1000,
+        ];
+
+        if (! isset($unitsInMilliseconds[$this->timeUnit])) {
+            throw new \Exception("Invalid time unit provided: $this->timeUnit");
         }
 
-        return 1000;
+        return $this->timeInterval * $unitsInMilliseconds[$this->timeUnit];
     }
 }

@@ -54,6 +54,10 @@ You can create a rate limiter to limit per second or per minute.
 RateLimiterMiddleware::perSecond(3); // Max. 3 requests per second
 
 RateLimiterMiddleware::perMinute(5); // Max. 5 requests per minute
+
+RateLimiterMiddleware::custom(3, 30, RateLimiter::TIME_FRAME_SECOND); // Max. 3 requests per 30 seconds
+
+RateLimiterMiddleware::custom(7, 15, RateLimiter::TIME_FRAME_MINUTE); // Max. 7 requests per 15 minutes
 ```
 
 ## Custom stores
