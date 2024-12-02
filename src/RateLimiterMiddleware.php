@@ -14,7 +14,7 @@ class RateLimiterMiddleware
         $this->rateLimiter = $rateLimiter;
     }
 
-    public static function perSecond(int $limit, Store $store = null, Deferrer $deferrer = null): RateLimiterMiddleware
+    public static function perSecond(int $limit, ?Store $store = null, ?Deferrer $deferrer = null): RateLimiterMiddleware
     {
         $rateLimiter = new RateLimiter(
             $limit,
@@ -26,7 +26,7 @@ class RateLimiterMiddleware
         return new static($rateLimiter);
     }
 
-    public static function perMinute(int $limit, Store $store = null, Deferrer $deferrer = null): RateLimiterMiddleware
+    public static function perMinute(int $limit, ?Store $store = null, ?Deferrer $deferrer = null): RateLimiterMiddleware
     {
         $rateLimiter = new RateLimiter(
             $limit,
