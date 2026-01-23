@@ -56,6 +56,12 @@ RateLimiterMiddleware::perSecond(3); // Max. 3 requests per second
 RateLimiterMiddleware::perMinute(5); // Max. 5 requests per minute
 ```
 
+Or with a custom interval in milliseconds.
+
+```php
+RateLimiterMiddleware::customInterval(7, 10 * 1000); // Max. 7 requests per 10 seconds
+```
+
 ## Custom stores
 
 By default, the rate limiter works in memory. This means that if you have a second PHP process (or Guzzle client) consuming the same API, you'd still possibly hit the rate limit. To work around this issue, the rate limiter's state should be persisted to a cache. Implement the `Store` interface with your own cache, and pass the store to the rate limiter.

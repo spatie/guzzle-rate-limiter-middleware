@@ -74,6 +74,14 @@ class RateLimiter
             return 60 * 1000;
         }
 
+        if ($this->timeFrame === self::TIME_FRAME_SECOND) {
+            return 1000;
+        }
+
+        if (($timeFrame = intval($this->timeFrame)) !== 0) {
+            return $timeFrame;
+        }
+
         return 1000;
     }
 }
