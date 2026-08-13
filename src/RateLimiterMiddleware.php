@@ -2,48 +2,40 @@
 
 namespace Spatie\GuzzleRateLimiterMiddleware;
 
+use Closure;
 use Psr\Http\Message\RequestInterface;
 
 class RateLimiterMiddleware
 {
-    /** @var \Spatie\GuzzleRateLimiterMiddleware\RateLimiter */
-    protected $rateLimiter;
-
-    private function __construct(RateLimiter $rateLimiter)
-    {
-        $this->rateLimiter = $rateLimiter;
+    private function __construct(
+        protected RateLimiter $rateLimiter,
+    ) {
     }
 
-    public static function perSecond(int $limit, ?Store $store = null, ?Deferrer $deferrer = null): RateLimiterMiddleware
+    public static function perSecond(int $limit, ?Store $store = null, ?Deferrer $deferrer = null): static
     {
-        $rateLimiter = new RateLimiter(
+        return new static(new RateLimiter(
             $limit,
             RateLimiter::TIME_FRAME_SECOND,
             $store ?? new InMemoryStore(),
-            $deferrer ?? new SleepDeferrer()
-        );
-
-        return new static($rateLimiter);
+            $deferrer ?? new SleepDeferrer(),
+        ));
     }
 
-    public static function perMinute(int $limit, ?Store $store = null, ?Deferrer $deferrer = null): RateLimiterMiddleware
+    public static function perMinute(int $limit, ?Store $store = null, ?Deferrer $deferrer = null): static
     {
-        $rateLimiter = new RateLimiter(
+        return new static(new RateLimiter(
             $limit,
             RateLimiter::TIME_FRAME_MINUTE,
             $store ?? new InMemoryStore(),
-            $deferrer ?? new SleepDeferrer()
-        );
-
-        return new static($rateLimiter);
+            $deferrer ?? new SleepDeferrer(),
+        ));
     }
 
-    public function __invoke(callable $handler)
+    public function __invoke(callable $handler): Closure
     {
-        return function (RequestInterface $request, array $options) use ($handler) {
-            return $this->rateLimiter->handle(function () use ($request, $handler, $options) {
-                return $handler($request, $options);
-            });
-        };
+        return fn (RequestInterface $request, array $options) => $this->rateLimiter->handle(
+            fn () => $handler($request, $options),
+        );
     }
 }

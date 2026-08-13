@@ -1,138 +1,104 @@
 <?php
 
-namespace Spatie\GuzzleRateLimiterMiddleware\Tests;
-
 use Spatie\GuzzleRateLimiterMiddleware\RateLimiter;
+use Spatie\GuzzleRateLimiterMiddleware\Tests\TestDeferrer;
 
-class RateLimiterTest extends TestCase
-{
-    /** @test */
-    public function it_execute_actions_below_a_limit_in_seconds()
-    {
-        $rateLimiter = $this->createRateLimiter(3, RateLimiter::TIME_FRAME_SECOND);
+it('executes actions below a limit in seconds', function () {
+    $deferrer = new TestDeferrer();
+    $rateLimiter = createRateLimiter(3, RateLimiter::TIME_FRAME_SECOND, $deferrer);
 
-        $this->assertEquals(0, $this->deferrer->getCurrentTime());
+    expect($deferrer->getCurrentTime())->toBe(0);
 
-        $rateLimiter->handle(function () {
-            $this->deferrer->sleep(100);
-        });
+    $rateLimiter->handle(fn () => $deferrer->sleep(100));
 
-        $this->assertEquals(100, $this->deferrer->getCurrentTime());
+    expect($deferrer->getCurrentTime())->toBe(100);
 
-        $rateLimiter->handle(function () {
-            $this->deferrer->sleep(100);
-        });
+    $rateLimiter->handle(fn () => $deferrer->sleep(100));
 
-        $this->assertEquals(200, $this->deferrer->getCurrentTime());
+    expect($deferrer->getCurrentTime())->toBe(200);
 
-        $rateLimiter->handle(function () {
-            $this->deferrer->sleep(100);
-        });
+    $rateLimiter->handle(fn () => $deferrer->sleep(100));
 
-        $this->assertEquals(300, $this->deferrer->getCurrentTime());
+    expect($deferrer->getCurrentTime())->toBe(300);
 
-        $this->deferrer->sleep(700);
+    $deferrer->sleep(700);
 
-        $rateLimiter->handle(function () {
-            $this->deferrer->sleep(100);
-        });
+    $rateLimiter->handle(fn () => $deferrer->sleep(100));
 
-        $this->assertEquals(1100, $this->deferrer->getCurrentTime());
+    expect($deferrer->getCurrentTime())->toBe(1100);
 
-        $rateLimiter->handle(function () {
-            $this->deferrer->sleep(100);
-        });
+    $rateLimiter->handle(fn () => $deferrer->sleep(100));
 
-        $this->assertEquals(1200, $this->deferrer->getCurrentTime());
-    }
+    expect($deferrer->getCurrentTime())->toBe(1200);
+});
 
-    /** @test */
-    public function it_defers_actions_when_it_reaches_a_limit_in_seconds()
-    {
-        $rateLimiter = $this->createRateLimiter(3, RateLimiter::TIME_FRAME_SECOND);
+it('defers actions when it reaches a limit in seconds', function () {
+    $deferrer = new TestDeferrer();
+    $rateLimiter = createRateLimiter(3, RateLimiter::TIME_FRAME_SECOND, $deferrer);
 
-        $this->assertEquals(0, $this->deferrer->getCurrentTime());
+    expect($deferrer->getCurrentTime())->toBe(0);
 
-        $rateLimiter->handle(function () {
-        });
+    $rateLimiter->handle(fn () => null);
 
-        $this->assertEquals(0, $this->deferrer->getCurrentTime());
+    expect($deferrer->getCurrentTime())->toBe(0);
 
-        $rateLimiter->handle(function () {
-        });
+    $rateLimiter->handle(fn () => null);
 
-        $this->assertEquals(0, $this->deferrer->getCurrentTime());
+    expect($deferrer->getCurrentTime())->toBe(0);
 
-        $rateLimiter->handle(function () {
-        });
+    $rateLimiter->handle(fn () => null);
 
-        $this->assertEquals(0, $this->deferrer->getCurrentTime());
+    expect($deferrer->getCurrentTime())->toBe(0);
 
-        $rateLimiter->handle(function () {
-        });
+    $rateLimiter->handle(fn () => null);
 
-        $this->assertEquals(1000, $this->deferrer->getCurrentTime());
-    }
+    expect($deferrer->getCurrentTime())->toBe(1000);
+});
 
-    /** @test */
-    public function it_execute_actions_below_a_limit_in_minutes()
-    {
-        $rateLimiter = $this->createRateLimiter(3, RateLimiter::TIME_FRAME_MINUTE);
+it('executes actions below a limit in minutes', function () {
+    $deferrer = new TestDeferrer();
+    $rateLimiter = createRateLimiter(3, RateLimiter::TIME_FRAME_MINUTE, $deferrer);
 
-        $this->assertEquals(0, $this->deferrer->getCurrentTime());
+    expect($deferrer->getCurrentTime())->toBe(0);
 
-        $rateLimiter->handle(function () {
-            $this->deferrer->sleep(100);
-        });
+    $rateLimiter->handle(fn () => $deferrer->sleep(100));
 
-        $this->assertEquals(100, $this->deferrer->getCurrentTime());
+    expect($deferrer->getCurrentTime())->toBe(100);
 
-        $rateLimiter->handle(function () {
-            $this->deferrer->sleep(100);
-        });
+    $rateLimiter->handle(fn () => $deferrer->sleep(100));
 
-        $this->assertEquals(200, $this->deferrer->getCurrentTime());
+    expect($deferrer->getCurrentTime())->toBe(200);
 
-        $rateLimiter->handle(function () {
-            $this->deferrer->sleep(100);
-        });
+    $rateLimiter->handle(fn () => $deferrer->sleep(100));
 
-        $this->assertEquals(300, $this->deferrer->getCurrentTime());
+    expect($deferrer->getCurrentTime())->toBe(300);
 
-        $this->deferrer->sleep(59700);
+    $deferrer->sleep(59700);
 
-        $rateLimiter->handle(function () {
-            $this->deferrer->sleep(100);
-        });
+    $rateLimiter->handle(fn () => $deferrer->sleep(100));
 
-        $this->assertEquals(60100, $this->deferrer->getCurrentTime());
-    }
+    expect($deferrer->getCurrentTime())->toBe(60100);
+});
 
-    /** @test */
-    public function it_defers_actions_when_it_reaches_a_limit_in_minutes()
-    {
-        $rateLimiter = $this->createRateLimiter(3, RateLimiter::TIME_FRAME_MINUTE);
+it('defers actions when it reaches a limit in minutes', function () {
+    $deferrer = new TestDeferrer();
+    $rateLimiter = createRateLimiter(3, RateLimiter::TIME_FRAME_MINUTE, $deferrer);
 
-        $this->assertEquals(0, $this->deferrer->getCurrentTime());
+    expect($deferrer->getCurrentTime())->toBe(0);
 
-        $rateLimiter->handle(function () {
-        });
+    $rateLimiter->handle(fn () => null);
 
-        $this->assertEquals(0, $this->deferrer->getCurrentTime());
+    expect($deferrer->getCurrentTime())->toBe(0);
 
-        $rateLimiter->handle(function () {
-        });
+    $rateLimiter->handle(fn () => null);
 
-        $this->assertEquals(0, $this->deferrer->getCurrentTime());
+    expect($deferrer->getCurrentTime())->toBe(0);
 
-        $rateLimiter->handle(function () {
-        });
+    $rateLimiter->handle(fn () => null);
 
-        $this->assertEquals(0, $this->deferrer->getCurrentTime());
+    expect($deferrer->getCurrentTime())->toBe(0);
 
-        $rateLimiter->handle(function () {
-        });
+    $rateLimiter->handle(fn () => null);
 
-        $this->assertEquals(60000, $this->deferrer->getCurrentTime());
-    }
-}
+    expect($deferrer->getCurrentTime())->toBe(60000);
+});
