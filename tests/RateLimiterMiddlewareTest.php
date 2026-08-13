@@ -1,52 +1,40 @@
 <?php
 
-namespace Spatie\GuzzleRateLimiterMiddleware\Tests;
-
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use Spatie\GuzzleRateLimiterMiddleware\InMemoryStore;
 use Spatie\GuzzleRateLimiterMiddleware\RateLimiterMiddleware;
+use Spatie\GuzzleRateLimiterMiddleware\Tests\TestDeferrer;
 
-class RateLimiterMiddlewareTest extends TestCase
-{
-    /** @test */
-    public function it_has_named_constructors_to_create_instances()
-    {
-        $this->assertInstanceOf(
-            RateLimiterMiddleware::class,
-            RateLimiterMiddleware::perSecond(5)
-        );
+it('has named constructors to create instances', function () {
+    expect(RateLimiterMiddleware::perSecond(5))->toBeInstanceOf(RateLimiterMiddleware::class);
 
-        $this->assertInstanceOf(
-            RateLimiterMiddleware::class,
-            RateLimiterMiddleware::perMinute(5)
-        );
+    expect(RateLimiterMiddleware::perMinute(5))->toBeInstanceOf(RateLimiterMiddleware::class);
+});
+
+it('defers requests sent through a guzzle client', function () {
+    $deferrer = new TestDeferrer();
+
+    $stack = HandlerStack::create(new MockHandler([
+        new Response(200),
+        new Response(200),
+        new Response(200),
+        new Response(200),
+    ]));
+
+    $stack->push(RateLimiterMiddleware::perSecond(3, new InMemoryStore(), $deferrer));
+
+    $client = new Client(['handler' => $stack]);
+
+    foreach (range(1, 3) as $ignored) {
+        expect($client->get('https://spatie.be')->getStatusCode())->toBe(200);
     }
 
-    /** @test */
-    public function it_defers_requests_sent_through_a_guzzle_client()
-    {
-        $stack = HandlerStack::create(new MockHandler([
-            new Response(200),
-            new Response(200),
-            new Response(200),
-            new Response(200),
-        ]));
+    expect($deferrer->getCurrentTime())->toBe(0);
 
-        $stack->push(RateLimiterMiddleware::perSecond(3, new InMemoryStore(), $this->deferrer));
+    $client->get('https://spatie.be');
 
-        $client = new Client(['handler' => $stack]);
-
-        for ($i = 0; $i < 3; $i++) {
-            $this->assertEquals(200, $client->get('https://spatie.be')->getStatusCode());
-        }
-
-        $this->assertEquals(0, $this->deferrer->getCurrentTime());
-
-        $client->get('https://spatie.be');
-
-        $this->assertEquals(1000, $this->deferrer->getCurrentTime());
-    }
-}
+    expect($deferrer->getCurrentTime())->toBe(1000);
+});
