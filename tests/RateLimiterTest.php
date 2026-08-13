@@ -1,11 +1,11 @@
 <?php
 
-use Spatie\GuzzleRateLimiterMiddleware\RateLimiter;
 use Spatie\GuzzleRateLimiterMiddleware\Tests\TestDeferrer;
+use Spatie\GuzzleRateLimiterMiddleware\TimeFrame;
 
 it('executes actions below a limit in seconds', function () {
     $deferrer = new TestDeferrer();
-    $rateLimiter = createRateLimiter(3, RateLimiter::TIME_FRAME_SECOND, $deferrer);
+    $rateLimiter = createRateLimiter(3, TimeFrame::Second, $deferrer);
 
     expect($deferrer->getCurrentTime())->toBe(0);
 
@@ -34,7 +34,7 @@ it('executes actions below a limit in seconds', function () {
 
 it('defers actions when it reaches a limit in seconds', function () {
     $deferrer = new TestDeferrer();
-    $rateLimiter = createRateLimiter(3, RateLimiter::TIME_FRAME_SECOND, $deferrer);
+    $rateLimiter = createRateLimiter(3, TimeFrame::Second, $deferrer);
 
     expect($deferrer->getCurrentTime())->toBe(0);
 
@@ -57,7 +57,7 @@ it('defers actions when it reaches a limit in seconds', function () {
 
 it('executes actions below a limit in minutes', function () {
     $deferrer = new TestDeferrer();
-    $rateLimiter = createRateLimiter(3, RateLimiter::TIME_FRAME_MINUTE, $deferrer);
+    $rateLimiter = createRateLimiter(3, TimeFrame::Minute, $deferrer);
 
     expect($deferrer->getCurrentTime())->toBe(0);
 
@@ -82,7 +82,7 @@ it('executes actions below a limit in minutes', function () {
 
 it('defers actions when it reaches a limit in minutes', function () {
     $deferrer = new TestDeferrer();
-    $rateLimiter = createRateLimiter(3, RateLimiter::TIME_FRAME_MINUTE, $deferrer);
+    $rateLimiter = createRateLimiter(3, TimeFrame::Minute, $deferrer);
 
     expect($deferrer->getCurrentTime())->toBe(0);
 

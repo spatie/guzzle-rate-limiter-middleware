@@ -4,34 +4,15 @@ namespace Spatie\GuzzleRateLimiterMiddleware;
 
 class RateLimiter
 {
-    const TIME_FRAME_MINUTE = 'minute';
-    const TIME_FRAME_SECOND = 'second';
-
-    /** @var int */
-    protected $limit;
-
-    /** @var string */
-    protected $timeFrame;
-
-    /** @var \Spatie\RateLimiter\Store */
-    protected $store;
-
-    /** @var \Spatie\GuzzleRateLimiterMiddleware\Deferrer */
-    protected $deferrer;
-
     public function __construct(
-        int $limit,
-        string $timeFrame,
-        Store $store,
-        Deferrer $deferrer
+        protected readonly int $limit,
+        protected readonly TimeFrame $timeFrame,
+        protected readonly Store $store,
+        protected readonly Deferrer $deferrer,
     ) {
-        $this->limit = $limit;
-        $this->timeFrame = $timeFrame;
-        $this->store = $store;
-        $this->deferrer = $deferrer;
     }
 
-    public function handle(callable $callback)
+    public function handle(callable $callback): mixed
     {
         $delayUntilNextRequest = $this->delayUntilNextRequest();
 
@@ -41,7 +22,7 @@ class RateLimiter
 
         $this->store->push(
             $this->deferrer->getCurrentTime(),
-            $this->limit
+            $this->limit,
         );
 
         return $callback();
@@ -49,13 +30,11 @@ class RateLimiter
 
     protected function delayUntilNextRequest(): int
     {
-        $currentTimeFrameStart = $this->deferrer->getCurrentTime() - $this->timeFrameLengthInMilliseconds();
+        $currentTimeFrameStart = $this->deferrer->getCurrentTime() - $this->timeFrame->lengthInMilliseconds();
 
         $requestsInCurrentTimeFrame = array_values(array_filter(
             $this->store->get(),
-            function (int $timestamp) use ($currentTimeFrameStart) {
-                return $timestamp >= $currentTimeFrameStart;
-            }
+            fn (int $timestamp) => $timestamp >= $currentTimeFrameStart,
         ));
 
         if (count($requestsInCurrentTimeFrame) < $this->limit) {
@@ -65,15 +44,6 @@ class RateLimiter
         $oldestRequestStartTimeRelativeToCurrentTimeFrame =
             $this->deferrer->getCurrentTime() - $requestsInCurrentTimeFrame[0];
 
-        return $this->timeFrameLengthInMilliseconds() - $oldestRequestStartTimeRelativeToCurrentTimeFrame;
-    }
-
-    protected function timeFrameLengthInMilliseconds(): int
-    {
-        if ($this->timeFrame === self::TIME_FRAME_MINUTE) {
-            return 60 * 1000;
-        }
-
-        return 1000;
+        return $this->timeFrame->lengthInMilliseconds() - $oldestRequestStartTimeRelativeToCurrentTimeFrame;
     }
 }

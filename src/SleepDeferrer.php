@@ -9,7 +9,7 @@ class SleepDeferrer implements Deferrer
         return (int) round(microtime(true) * 1000);
     }
 
-    public function sleep(int $milliseconds)
+    public function sleep(int $milliseconds): void
     {
         usleep($milliseconds * 1000);
     }

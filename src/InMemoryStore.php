@@ -4,15 +4,16 @@ namespace Spatie\GuzzleRateLimiterMiddleware;
 
 class InMemoryStore implements Store
 {
-    /** @var int[] */
-    protected $timestamps = [];
+    /** @var array<int, int> */
+    protected array $timestamps = [];
 
+    /** @return array<int, int> */
     public function get(): array
     {
         return $this->timestamps;
     }
 
-    public function push(int $timestamp, int $limit)
+    public function push(int $timestamp, int $limit): void
     {
         $this->timestamps[] = $timestamp;
     }
