@@ -4,9 +4,12 @@ namespace Spatie\GuzzleRateLimiterMiddleware;
 
 class RateLimiter
 {
+    const TIME_FRAME_MINUTE = 'minute';
+    const TIME_FRAME_SECOND = 'second';
+
     public function __construct(
         protected readonly int $limit,
-        protected readonly TimeFrame $timeFrame,
+        protected readonly string $timeFrame,
         protected readonly Store $store,
         protected readonly Deferrer $deferrer,
     ) {
@@ -30,7 +33,7 @@ class RateLimiter
 
     protected function delayUntilNextRequest(): int
     {
-        $currentTimeFrameStart = $this->deferrer->getCurrentTime() - $this->timeFrame->lengthInMilliseconds();
+        $currentTimeFrameStart = $this->deferrer->getCurrentTime() - $this->timeFrameLengthInMilliseconds();
 
         $requestsInCurrentTimeFrame = array_values(array_filter(
             $this->store->get(),
@@ -44,6 +47,14 @@ class RateLimiter
         $oldestRequestStartTimeRelativeToCurrentTimeFrame =
             $this->deferrer->getCurrentTime() - $requestsInCurrentTimeFrame[0];
 
-        return $this->timeFrame->lengthInMilliseconds() - $oldestRequestStartTimeRelativeToCurrentTimeFrame;
+        return $this->timeFrameLengthInMilliseconds() - $oldestRequestStartTimeRelativeToCurrentTimeFrame;
+    }
+
+    protected function timeFrameLengthInMilliseconds(): int
+    {
+        return match ($this->timeFrame) {
+            self::TIME_FRAME_MINUTE => 60 * 1000,
+            default => 1000,
+        };
     }
 }

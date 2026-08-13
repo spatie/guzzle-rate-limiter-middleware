@@ -13,7 +13,7 @@ class InMemoryStore implements Store
         return $this->timestamps;
     }
 
-    public function push(int $timestamp, int $limit): void
+    public function push(int $timestamp, int $limit)
     {
         $this->timestamps[] = $timestamp;
     }

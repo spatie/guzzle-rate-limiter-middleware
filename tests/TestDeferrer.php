@@ -13,7 +13,7 @@ class TestDeferrer implements Deferrer
         return $this->currentTime;
     }
 
-    public function sleep(int $milliseconds): void
+    public function sleep(int $milliseconds)
     {
         $this->currentTime += $milliseconds;
     }
