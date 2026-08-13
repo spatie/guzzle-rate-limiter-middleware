@@ -8,7 +8,7 @@ use Psr\Http\Message\RequestInterface;
 class RateLimiterMiddleware
 {
     private function __construct(
-        protected readonly RateLimiter $rateLimiter,
+        protected RateLimiter $rateLimiter,
     ) {
     }
 

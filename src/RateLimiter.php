@@ -8,10 +8,10 @@ class RateLimiter
     const TIME_FRAME_SECOND = 'second';
 
     public function __construct(
-        protected readonly int $limit,
-        protected readonly string $timeFrame,
-        protected readonly Store $store,
-        protected readonly Deferrer $deferrer,
+        protected int $limit,
+        protected string $timeFrame,
+        protected Store $store,
+        protected Deferrer $deferrer,
     ) {
     }
 
